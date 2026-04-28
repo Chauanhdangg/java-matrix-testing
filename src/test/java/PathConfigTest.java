@@ -4,27 +4,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.nio.file.Path;
 
 public class PathConfigTest {
-    PathConfig config = new PathConfig();
 
     @Test
     void testLegacyPathBehavior() {
-        String path = config.getWindowsStylePath();
-        String os = System.getProperty("os.name");
-        System.out.println("Running on: " + os + " | Path: " + path);
-        assertTrue(path.contains("\\"));
-    }
+        PathConfig config = new PathConfig();
+        Path path = config.getDatabasePath();
 
-    @Test
-    void testModernPathBehavior() {
-        Path path = config.getMultiPlatformPath();
-        String os = System.getProperty("os.name").toLowerCase();
         String pathString = path.toString();
+        String os = System.getProperty("os.name").toLowerCase();
 
-        System.out.println("OS: " + os + " | Optimized path: " + pathString);
-         if (os.contains("win")) {
-             assertTrue(pathString.contains("\\"), "Must use \\ in Windows");
-         } else {
-             assertTrue(pathString.contains("//"), "Must use / in Linux or macOS");
-         }
+        System.out.println("Testing on OS: " + os);
+        System.out.println("Generated Path: " + pathString);
+
+        assertTrue(pathString.contains("auction.db"));
+
+        if (os.contains("win")) {
+            assertTrue(pathString.contains("\\"));
+        } else {
+            assertTrue(pathString.contains("/"));
+        }
     }
 }
